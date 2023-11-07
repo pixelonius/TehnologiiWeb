@@ -2,11 +2,23 @@ const express = require('express');
 const cors = require('cors');
 const orders = require('./utils/constants');
 const app = express();
+const dotenv=require('dotenv');
+const path=require('path');
 
+const logger = (req, res, next) => {
+    console.log(`${req.method} ${req.path} ${res.statusCode}`);
+    next();
+    };
+
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
     origin: 'http://127.0.0.1:5500'
 }));
 
+dotenv.config();
+const PORT=process.env.PORT || 3000
+
+app.use(logger);
 app.get('/', function (req, res) {
   res.send('Hello World')
 })
@@ -75,6 +87,6 @@ app.delete('/orders/:id', function(req, res){
     } else res.status(404).json({message:"Nor found"})
 })
 
-app.listen(3000, function() {
-    console.log("Server listening on 3000");
+app.listen(PORT, function() {
+    console.log(`Server listening on ${PORT}`);
 })

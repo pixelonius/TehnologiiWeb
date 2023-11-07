@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>Client</div>
+    <button onclick="getOrders()">Get orders</button>
+    <button onClick="getOrders(1)">Get order by ID</button>
+    <button onclick="addOrder()">Add order</button>
+    <button onclick="updateOrder(1)">updateOrder</button>
+    <button onclick="deleteOrder(1)">Delete</button>
+
+    <script>
+        const api='http://localhost:3000'
+        async function getOrders(id=null){
+            const result =await fetch(id ? `${api}/orders/${id}` : `${api}/orders`);
+            const response= await result.json();
+
+            console.log(response)
+        }
+
+        async function addOrder(){
+            const newOrder={
+                name:'Mihai',
+                value:400,
+                status:'pending'
+            }
+
+            const result=await fetch(`${api}/orders`, {
+                method: 'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify(newOrder)
+            });
+
+            const response=await response.json();
+
+            console.log(response);
+        }
+
+        async function updateOrder(id=null){
+            if(id){
+                const updateOrder={
+                    status: 'delivered'
+                }
+
+                const result=await fetch (`${api}/orders/${id})`,{
+                        method: 'PUT',
+                        headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify(updateOrder)
+                });
+                const response=await result.json();
+
+                console.log(response)
+            }
+        }
+
+        async function deleteOrder(id=null){
+            if(id){
+                const result = await fetch(`${api}/orders/${id}`,
+                {method:'DELETE'});
+            
+            const response=await result.json();
+
+            console.log(response)
+        }}
+    </script>
+</body>
+</html>
